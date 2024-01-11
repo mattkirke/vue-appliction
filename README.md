@@ -64,13 +64,16 @@ Write playwright tests to test the following scenarios:
 
 ## Submission:
 
-Push your entire project to gitlab.
+After you have finished your work, please push your entire project to gitlab, make the repository public and email the url of the repo to james.taylor@esprofiler.com
+
+The deadline for submissions is Thursday 18th January 2023 at 5pm.
 
 Provide clear instructions on how to run the Playwright test and the Vue application.
 
 Edit the README file to include any additional information or improvements you would make if given more time.
 
 ### Additional Improvements (Optional):
+
 If you have extra time, please consider the following improvements:
 
 * Enhancements to the Playwright test script.
