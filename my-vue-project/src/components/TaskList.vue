@@ -8,29 +8,48 @@
             <button class="buttonLink" type="submit">Add Task</button>
         </form>
     </div>
+    <!-- display all tasks -->
     <div>
-        <ul>
-            <li v-for="(task, index) in tasks" :key="index">{{ task }}</li>
-        </ul>
+        <p>Tasks that need to be complete: </p>
+        <div class="list">
+        <!-- display all tasks by iterating through our list  -->
+            <li v-for="(task, index) in tasks" :key="index" class="taskItem">
+                <span>{{ task }}</span>
+                <button @click="deleteTask(index)" class="buttonDelete">Delete</button>
+            </li>
+        </div>
     </div>
 </template>
 
 <script>
-// vue component
+// Vue component - exporting overall shape and structure of list
 export default {
     data(){
-    //initail data component
+    // Initail data component for tasks (updates local storage so recent set tasks are stored even when refreshed
+
     return{
         newTask: '',
-        tasks: ['Hang painting', 'Fix radiator',],
+        tasks: JSON.parse(localStorage.getItem('tasks')) || ['Hang painting', 'Fix radiator',],
         }
     },
     methods:{
+        // Add Task
         addTask() {
-            if (this.newTask.trim() !== '') {
-                this.tasks.push(this.newTask.trim());
-                this.newTask = ''; // Clear the input after adding a task
+            if (this.newTask !== '') {
+                this.tasks.push(this.newTask)
+                this.newTask = ''
+                this.saveTasks()
             }
+        },
+        // Delete Tasks
+        deleteTask(index){
+            this.tasks.splice(index, 1)
+            this.saveTasks()
+
+        },
+        // save updated list of Tasks
+        saveTasks(){
+            localStorage.setItem('tasks', JSON.stringify(this.tasks))
         }
     }
 }
@@ -42,20 +61,43 @@ export default {
     .heading{
     
     }
+
     .buttonLink {
         display: inline-block;
-        padding: 10px 20px;
+        padding: 15px 25px;
         background-color: #007BFF;
         color: #FFFFFF;
-        text-decoration: none;
+
         border-radius: 5px;
         transition: background-color 0.3s ease;
-    }
-    .inputBox{
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 5px;
-        margin: 5px;
+        font-size: 20px;
     }
 
+    .inputBox{
+        display: inline-block;
+        padding: 15px 25px;
+        border-radius: 5px;
+        margin: 5px;
+        font-size: 20px;
+    }
+    .list{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .buttonDelete{
+        display: inline-block;
+        background-color: #007BFF;
+        color: #FFFFFF;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-size: 19px;
+        margin-left: 5px;
+    }
 </style>
