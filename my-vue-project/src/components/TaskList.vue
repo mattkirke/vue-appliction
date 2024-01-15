@@ -5,16 +5,17 @@
         <form @submit.prevent="addTask">
             <!--v-model for two way data pairing-->
             <input v-model="newTask" class="inputBox" placeholder="Enter Task Here..." />
-            <button class="buttonLink" type="submit">Add Task</button>
+            <button class="buttonLinkAdd" type="submit">Add Task</button>
         </form>
     </div>
     <!-- display all tasks -->
     <div>
+        <p>Click on the task to mark it as done!</p>
         <p>Tasks that need to be complete: </p>
         <div class="list">
         <!-- display all tasks by iterating through our list  -->
-            <li v-for="(task, index) in tasks" :key="index" class="taskItem">
-                <span>{{ task }}</span>
+            <li v-for="(task, index) in tasks" :key="index" class="taskItem" @click="completedTask(index)">
+                <span :class="{completed:task.completed}">{{ task.text }}</span>
                 <button @click="deleteTask(index)" class="buttonDelete">Delete</button>
             </li>
         </div>
@@ -29,14 +30,18 @@ export default {
 
     return{
         newTask: '',
-        tasks: JSON.parse(localStorage.getItem('tasks')) || ['Hang painting', 'Fix radiator',],
+        tasks: JSON.parse(localStorage.getItem('tasks')) || [
+            {text: 'Hang painting', completed: false},
+            {text: 'Fix radiator', completed: false},
+            ],
         }
     },
     methods:{
         // Add Task
+        // {text: this.newTask, completed: false}
         addTask() {
             if (this.newTask !== '') {
-                this.tasks.push(this.newTask)
+                this.tasks.push({ text: this.newTask, completed: false })
                 this.newTask = ''
                 this.saveTasks()
             }
@@ -45,7 +50,13 @@ export default {
         deleteTask(index){
             this.tasks.splice(index, 1)
             this.saveTasks()
-
+        },
+        //marking task as complete - click on the task
+        completedTask(index) {
+            if (typeof this.tasks[index] === 'object') {
+                this.tasks[index].completed = !this.tasks[index].completed;
+                this.saveTasks();
+            }
         },
         // save updated list of Tasks
         saveTasks(){
@@ -58,11 +69,8 @@ export default {
 
 <style scoped>
 /* scoped - only in this sectiion */
-    .heading{
-    
-    }
 
-    .buttonLink {
+    .buttonLink, .buttonLinkAdd{
         display: inline-block;
         padding: 15px 25px;
         background-color: #007BFF;
@@ -90,13 +98,15 @@ export default {
         border-radius: 5px;
         margin-bottom: 20px;
     }
-    
+    .completed{
+        color: rgb(0, 128, 0);
+    }
     .buttonDelete{
         display: inline-block;
         background-color: #007BFF;
         color: #FFFFFF;
         border-radius: 5px;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.25s ease;
         font-size: 19px;
         margin-left: 5px;
     }
